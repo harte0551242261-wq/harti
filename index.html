@@ -1817,6 +1817,48 @@ const LS={
 };
 const K = { r:'ghiyab_records', e:'ghiyab_employees', u:'ghiyab_users', c:'ghiyab_counter', rpt:'ghiyab_report' };
 
+// ══════════════════════════════════════════════════════
+// 🔐 نظام التشفير — SHA-256 (مدمج في المتصفح)
+// ══════════════════════════════════════════════════════
+async function hashPassword(plain){
+  try{
+    const buf = new TextEncoder().encode(String(plain));
+    const hash = await crypto.subtle.digest('SHA-256', buf);
+    return 'sha256:' + Array.from(new Uint8Array(hash))
+      .map(b => b.toString(16).padStart(2,'0')).join('');
+  }catch(e){
+    // fallback بسيط لو crypto.subtle ما اشتغل (نادر جداً)
+    return 'plain:' + plain;
+  }
+}
+// التحقق من كلمة المرور — يدعم القديمة (نص صريح) والجديدة (مشفّرة)
+async function verifyPassword(plain, stored){
+  if(!stored) return false;
+  // كلمة مرور مشفّرة جديدة
+  if(String(stored).startsWith('sha256:')){
+    const h = await hashPassword(plain);
+    return h === stored;
+  }
+  // كلمة مرور قديمة بنص صريح (للتوافق)
+  return String(plain) === String(stored);
+}
+// قائمة المدراء الرئيسيين المحميين من الحذف وتخفيض الصلاحيات
+const PROTECTED_ADMINS = ['admin', 'مشهور'];
+function isProtectedAdmin(username){
+  return PROTECTED_ADMINS.indexOf(username) !== -1;
+}
+// ترقية كلمات المرور القديمة (نص صريح → مشفّرة) عند تحميل البيانات
+async function upgradeOldPasswords(){
+  let upgraded = false;
+  for(let i=0; i<USERS.length; i++){
+    if(USERS[i].password && !String(USERS[i].password).startsWith('sha256:') && !String(USERS[i].password).startsWith('plain:')){
+      USERS[i].password = await hashPassword(USERS[i].password);
+      upgraded = true;
+    }
+  }
+  if(upgraded){ LS.set(K.u, USERS); }
+}
+
 function setSave(s){
   const d=document.getElementById('sdot'), t=document.getElementById('stxt');
   if(!d||!t)return;
@@ -1950,6 +1992,8 @@ function boot(){
     }
     sortEmps();
     USERS       = LS.get(K.u, DEF_USERS);
+    // 🔐 ترقية كلمات المرور القديمة إلى مشفّرة (آمن: يستمر بدون انتظار)
+    upgradeOldPasswords();
     empIdCounter= LS.get(K.c, 62);
     reportList  = LS.get(K.rpt, null);
     if(!reportList||!reportList.length) reportList=EMPLOYEES.map(e=>({id:e.id,name:e.name,job:e.job}));
@@ -2330,11 +2374,14 @@ p{line-height:2.3;font-size:13px;}
   var w=window.open('','_blank'); w.document.write(html); w.document.close();
 }
 // ══ تسجيل الدخول ══
-function doLogin(){
+async function doLogin(){
   const u=document.getElementById('username').value.trim();
   const p=document.getElementById('password').value.trim();
-  const user=USERS.find(x=>x.username===u&&x.password===p);
-  if(!user){document.getElementById('lerr').classList.add('show');return;}
+  // البحث عن المستخدم باسم المستخدم فقط
+  const user=USERS.find(x=>x.username===u);
+  // التحقق من كلمة المرور (يدعم المشفّرة والقديمة)
+  const passOk = user ? await verifyPassword(p, user.password) : false;
+  if(!user || !passOk){document.getElementById('lerr').classList.add('show');return;}
   document.getElementById('lerr').classList.remove('show');
   currentUser=user;
   document.getElementById('user-label').textContent='👤 '+user.name;
@@ -2360,6 +2407,22 @@ function doLogin(){
   updateTime();
   setInterval(updateTime,1000);
   rebuildEmpSelects(); renderEmps(); updateSummary(); renderTable();
+
+  // ⚠️ تنبيه كلمة المرور الضعيفة الافتراضية
+  if(user.username==='مشهور' && p==='0000'){
+    setTimeout(function(){
+      if(confirm('⚠️ تنبيه أمني:\n\nأنت تستخدم كلمة المرور الافتراضية "0000" وهي ضعيفة جداً.\n\nهل تريد تغييرها الآن؟')){
+        openAccModal();
+      }
+    }, 1500);
+  }
+  if(user.username==='admin' && p==='1234'){
+    setTimeout(function(){
+      if(confirm('⚠️ تنبيه أمني:\n\nأنت تستخدم كلمة المرور الافتراضية "1234" وهي ضعيفة جداً.\n\nهل تريد تغييرها الآن؟')){
+        openAccModal();
+      }
+    }, 1500);
+  }
 }
 
 // ══ نظام الصلاحيات ══
@@ -3428,7 +3491,7 @@ function downloadReport(){const a=document.createElement('a');a.href=URL.createO
 // ══ إعدادات الحساب ══
 function openAccModal(){document.getElementById('cur-u').value=currentUser.username;['new-u','new-n','cur-p','new-p','conf-p'].forEach(id=>document.getElementById(id).value='');document.getElementById('acc-err').classList.remove('show');document.getElementById('acc-ok').classList.remove('show');document.getElementById('acc-modal').classList.add('show');}
 function closeAccModal(){document.getElementById('acc-modal').classList.remove('show');}
-function saveAcc(){const ae=document.getElementById('acc-err');const ao=document.getElementById('acc-ok');ae.classList.remove('show');ao.classList.remove('show');const cp=document.getElementById('cur-p').value.trim();const nu=document.getElementById('new-u').value.trim();const nn=document.getElementById('new-n').value.trim();const np=document.getElementById('new-p').value.trim();const cp2=document.getElementById('conf-p').value.trim();if(!cp){ae.textContent='يرجى إدخال كلمة المرور الحالية';ae.classList.add('show');return;}if(cp!==currentUser.password){ae.textContent='كلمة المرور الحالية غير صحيحة';ae.classList.add('show');return;}if(np&&np!==cp2){ae.textContent='كلمة المرور الجديدة وتأكيدها غير متطابقين';ae.classList.add('show');return;}if(np&&np.length<4){ae.textContent='كلمة المرور يجب أن تكون 4 أحرف على الأقل';ae.classList.add('show');return;}if(nu&&nu!==currentUser.username&&USERS.find(u=>u.username===nu)){ae.textContent='اسم المستخدم مستخدم بالفعل';ae.classList.add('show');return;}const idx=USERS.findIndex(u=>u.username===currentUser.username);if(nu)USERS[idx].username=currentUser.username=nu;if(nn)USERS[idx].name=currentUser.name=nn;if(np)USERS[idx].password=currentUser.password=np;persist();document.getElementById('user-label').textContent='👤 '+currentUser.name;document.getElementById('cur-u').value=currentUser.username;ao.textContent='✅ تم حفظ التعديلات بنجاح';ao.classList.add('show');setTimeout(()=>closeAccModal(),1600);}
+async function saveAcc(){const ae=document.getElementById('acc-err');const ao=document.getElementById('acc-ok');ae.classList.remove('show');ao.classList.remove('show');const cp=document.getElementById('cur-p').value.trim();const nu=document.getElementById('new-u').value.trim();const nn=document.getElementById('new-n').value.trim();const np=document.getElementById('new-p').value.trim();const cp2=document.getElementById('conf-p').value.trim();if(!cp){ae.textContent='يرجى إدخال كلمة المرور الحالية';ae.classList.add('show');return;}const cpOk = await verifyPassword(cp, currentUser.password);if(!cpOk){ae.textContent='كلمة المرور الحالية غير صحيحة';ae.classList.add('show');return;}if(np&&np!==cp2){ae.textContent='كلمة المرور الجديدة وتأكيدها غير متطابقين';ae.classList.add('show');return;}if(np&&np.length<4){ae.textContent='كلمة المرور يجب أن تكون 4 أحرف على الأقل';ae.classList.add('show');return;}if(nu&&nu!==currentUser.username&&USERS.find(u=>u.username===nu)){ae.textContent='اسم المستخدم مستخدم بالفعل';ae.classList.add('show');return;}const idx=USERS.findIndex(u=>u.username===currentUser.username);if(nu)USERS[idx].username=currentUser.username=nu;if(nn)USERS[idx].name=currentUser.name=nn;if(np){const hashed = await hashPassword(np);USERS[idx].password=currentUser.password=hashed;}persist();document.getElementById('user-label').textContent='👤 '+currentUser.name;document.getElementById('cur-u').value=currentUser.username;ao.textContent='✅ تم حفظ التعديلات بنجاح';ao.classList.add('show');setTimeout(()=>closeAccModal(),1600);}
 
 // ══ التصدير ══
 function getRows(){return records.map((r,i)=>[i+1,r.emp,r.leave,r.dur,r.start,r.end,r.notes||'',r.by]);}
@@ -3730,15 +3793,16 @@ function renderUsersTable(){
   const roleLabel = r => r==='admin'
     ? '<span style="background:#1a5276;color:#fff;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:800;">مدير</span>'
     : '<span style="background:#08B1A2;color:#fff;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:800;">معلم</span>';
+  const protectedBadge = '<span style="background:#f5d06a;color:#1a3c5e;padding:2px 7px;border-radius:6px;font-size:10px;font-weight:800;margin-right:4px;" title="مدير رئيسي محمي">🛡️</span>';
   tbody.innerHTML = USERS.map((u,i)=>`
     <tr>
-      <td style="font-weight:800;color:#1a5276;">${u.username}</td>
+      <td style="font-weight:800;color:#1a5276;">${isProtectedAdmin(u.username)?protectedBadge:''}${u.username}</td>
       <td>${u.name||'—'}</td>
       <td style="text-align:center;">${roleLabel(u.role||'admin')}</td>
       <td style="color:#037068;font-weight:700;">${u.linkedEmp||'<span style="color:#bbb;font-size:11px;">غير مرتبط</span>'}</td>
       <td style="text-align:center;">
         <button onclick="editUserModal(${i})" style="background:#e8f5ff;color:#1a5276;border:1px solid #b3d4f5;border-radius:7px;padding:5px 12px;font-size:11px;font-weight:800;cursor:pointer;margin-left:4px;font-family:'Almarai',sans-serif;">تعديل</button>
-        ${u.username==='admin'?'':'<button onclick="deleteUser('+i+')" style="background:#fff0f0;color:#c0392b;border:1px solid #f5b3b3;border-radius:7px;padding:5px 12px;font-size:11px;font-weight:800;cursor:pointer;font-family:\'Almarai\',sans-serif;">حذف</button>'}
+        ${isProtectedAdmin(u.username)?'':'<button onclick="deleteUser('+i+')" style="background:#fff0f0;color:#c0392b;border:1px solid #f5b3b3;border-radius:7px;padding:5px 12px;font-size:11px;font-weight:800;cursor:pointer;font-family:\'Almarai\',sans-serif;">حذف</button>'}
       </td>
     </tr>`).join('');
 }
@@ -3747,9 +3811,18 @@ function openAddUserModal(){
   document.getElementById('um-editing-idx').value='';
   document.getElementById('um-username').value='';
   document.getElementById('um-password').value='';
+  document.getElementById('um-password').placeholder='4 أحرف على الأقل';
   document.getElementById('um-name').value='';
   document.getElementById('um-role').value='teacher';
-  document.getElementById('um-err').style.display='none';
+  // إعادة تفعيل الحقول (لو كانت معطلة من تعديل سابق لمدير محمي)
+  document.getElementById('um-username').removeAttribute('readonly');
+  document.getElementById('um-role').removeAttribute('disabled');
+  const errBox = document.getElementById('um-err');
+  errBox.style.display='none';
+  errBox.style.color='#c0392b';
+  errBox.style.background='';
+  errBox.style.padding='';
+  errBox.style.borderRadius='';
   document.getElementById('user-modal-title').textContent='إضافة مستخدم جديد';
   // ملء قائمة الموظفين
   const sel = document.getElementById('um-emp');
@@ -3766,11 +3839,34 @@ function editUserModal(idx){
   const u = USERS[idx];
   document.getElementById('um-editing-idx').value=idx;
   document.getElementById('um-username').value=u.username;
-  document.getElementById('um-password').value=u.password;
+  // 🔐 لا نعرض كلمة المرور المشفّرة - تطلب جديدة
+  document.getElementById('um-password').value='';
+  document.getElementById('um-password').placeholder='أدخل كلمة المرور (مطلوبة عند التعديل)';
   document.getElementById('um-name').value=u.name||'';
   document.getElementById('um-role').value=u.role||'admin';
   document.getElementById('um-err').style.display='none';
   document.getElementById('user-modal-title').textContent='تعديل المستخدم';
+
+  // 🛡️ إشعار حماية للمدراء الرئيسيين
+  const errBox = document.getElementById('um-err');
+  if(isProtectedAdmin(u.username)){
+    errBox.textContent='🛡️ هذا حساب مدير رئيسي محمي - لا يمكن تغيير اسم المستخدم أو الدور';
+    errBox.style.display='block';
+    errBox.style.color='#1a3c5e';
+    errBox.style.background='#fff8e1';
+    errBox.style.padding='8px';
+    errBox.style.borderRadius='6px';
+    document.getElementById('um-username').setAttribute('readonly','readonly');
+    document.getElementById('um-role').setAttribute('disabled','disabled');
+  } else {
+    errBox.style.color='#c0392b';
+    errBox.style.background='';
+    errBox.style.padding='';
+    errBox.style.borderRadius='';
+    document.getElementById('um-username').removeAttribute('readonly');
+    document.getElementById('um-role').removeAttribute('disabled');
+  }
+
   // ملء قائمة الموظفين
   const sel = document.getElementById('um-emp');
   sel.innerHTML='<option value="">— اختر الموظف —</option>';
@@ -3787,7 +3883,7 @@ function closeUserModal(){
   document.getElementById('user-modal').style.display='none';
 }
 
-function saveUserModal(){
+async function saveUserModal(){
   const errEl = document.getElementById('um-err');
   errEl.style.display='none';
   const editIdx = document.getElementById('um-editing-idx').value;
@@ -3802,15 +3898,40 @@ function saveUserModal(){
   if(!name){errEl.textContent='يرجى إدخال الاسم الكامل';errEl.style.display='block';return;}
   if(role==='teacher'&&!linkedEmp){errEl.textContent='يرجى اختيار الموظف المرتبط بهذا الحساب';errEl.style.display='block';return;}
 
+  // 🛡️ حماية: منع تخفيض دور المدراء الرئيسيين
+  if(editIdx!==''){
+    const idx = parseInt(editIdx);
+    const currentUserName = USERS[idx].username;
+    if(isProtectedAdmin(currentUserName)){
+      if(role !== 'admin'){
+        errEl.textContent='لا يمكن تخفيض صلاحيات المدراء الرئيسيين (admin / مشهور)';
+        errEl.style.display='block';
+        return;
+      }
+      if(username !== currentUserName){
+        errEl.textContent='لا يمكن تغيير اسم المستخدم للمدراء الرئيسيين';
+        errEl.style.display='block';
+        return;
+      }
+    }
+  }
+
+  // 🔐 تشفير كلمة المرور قبل الحفظ
+  const hashedPassword = await hashPassword(password);
+
   if(editIdx===''){
     // إضافة جديد
     if(USERS.find(u=>u.username===username)){errEl.textContent='اسم المستخدم مستخدم بالفعل';errEl.style.display='block';return;}
-    USERS.push({username,password,name,role,linkedEmp,email:''});
+    USERS.push({username,password:hashedPassword,name,role,linkedEmp,email:''});
   } else {
     // تعديل
     const idx = parseInt(editIdx);
     if(USERS.find((u,i)=>i!==idx&&u.username===username)){errEl.textContent='اسم المستخدم مستخدم بالفعل';errEl.style.display='block';return;}
-    USERS[idx] = {...USERS[idx],username,password,name,role,linkedEmp};
+    USERS[idx] = {...USERS[idx],username,password:hashedPassword,name,role,linkedEmp};
+    // إذا كان المستخدم الحالي يعدّل بياناته، حدّث currentUser
+    if(currentUser && currentUser.username === USERS[idx].username){
+      currentUser = USERS[idx];
+    }
   }
   persist();
   closeUserModal();
@@ -3820,7 +3941,7 @@ function saveUserModal(){
 
 function deleteUser(idx){
   const u = USERS[idx];
-  if(u.username==='admin'){alert('لا يمكن حذف حساب المدير الرئيسي');return;}
+  if(isProtectedAdmin(u.username)){alert('🛡️ لا يمكن حذف حسابات المدراء الرئيسيين (admin / مشهور)');return;}
   if(!confirm(`هل تريد حذف المستخدم "${u.name}" (${u.username})؟`)) return;
   USERS.splice(idx,1);
   persist();

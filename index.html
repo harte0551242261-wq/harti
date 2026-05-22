@@ -1943,8 +1943,70 @@ const DEF_EMPS=[
   {id:61,name:'عبدالرحمن صالح ابن مصلح الحارثي',job:'معلم',spec:''}
 ];
 const DEF_USERS=[
-  {username:'admin',password:'1234',name:'المدير',email:'',role:'admin'},
-  {username:'مشهور',password:'0000',name:'مشهور الحارثي',email:'',role:'admin'}
+  {username:'admin',password:'sha256:03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4',name:'المدير',email:'',role:'admin'},
+  {username:'مشهور',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'مشهور الحارثي',email:'',role:'admin'},
+  // ══ المعلمون (61 معلم) — كلمة المرور 0000 لكل المعلمين ══
+  {username:'عبدالقادر الزهراني',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'عبدالقادر بن احمد بن محمد الزهراني',email:'',role:'teacher',linkedEmp:'عبدالقادر بن احمد بن محمد الزهراني'},
+  {username:'احمد الثقفي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'احمد بن حسين بن محمد الثقفي',email:'',role:'teacher',linkedEmp:'احمد بن حسين بن محمد الثقفي'},
+  {username:'يوسف العوفي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'يوسف محمد صالح بن جابر العوفي',email:'',role:'teacher',linkedEmp:'يوسف محمد صالح بن جابر العوفي'},
+  {username:'بدر اليماني',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'بدر احمد علي اليماني',email:'',role:'teacher',linkedEmp:'بدر احمد علي اليماني'},
+  {username:'خالد الفيفي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'خالد بن صبحان بن محمد الفيفي',email:'',role:'teacher',linkedEmp:'خالد بن صبحان بن محمد الفيفي'},
+  {username:'عبدالله البردى',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'عبدالله فرج جارالنبي البردى',email:'',role:'teacher',linkedEmp:'عبدالله فرج جارالنبي البردى'},
+  {username:'عبدالرحمن الثقفي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'عبدالرحمن احمد عابد الثقفي',email:'',role:'teacher',linkedEmp:'عبدالرحمن احمد عابد الثقفي'},
+  {username:'هاني العدواني',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'هاني عابد عبدالله العدواني',email:'',role:'teacher',linkedEmp:'هاني عابد عبدالله العدواني'},
+  {username:'أيمن القرشي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'أيمن عبدالعزيز علي القرشي',email:'',role:'teacher',linkedEmp:'أيمن عبدالعزيز علي القرشي'},
+  {username:'هلال الحارثي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'هلال مطلق عيضه الحارثي',email:'',role:'teacher',linkedEmp:'هلال مطلق عيضه الحارثي'},
+  {username:'عبدالواحد الثمالي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'عبدالواحد جمعان محمد الثمالي',email:'',role:'teacher',linkedEmp:'عبدالواحد جمعان محمد الثمالي'},
+  {username:'جابر الزهراني',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'جابر بن عبدالله بن جارالله الزهراني',email:'',role:'teacher',linkedEmp:'جابر بن عبدالله بن جارالله الزهراني'},
+  {username:'تركي القرشي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'تركي بن سليم بن سليم القرشي',email:'',role:'teacher',linkedEmp:'تركي بن سليم بن سليم القرشي'},
+  {username:'سمير الحارثي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'سمير محمد سلطان الحارثي',email:'',role:'teacher',linkedEmp:'سمير محمد سلطان الحارثي'},
+  {username:'سلطان العتيبي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'سلطان سعود محمد العتيبي',email:'',role:'teacher',linkedEmp:'سلطان سعود محمد العتيبي'},
+  {username:'تركي الثمالي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'تركي عبدالله محمد الثمالي',email:'',role:'teacher',linkedEmp:'تركي عبدالله محمد الثمالي'},
+  {username:'سلطان الطلحي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'سلطان علي معيوف الطلحي',email:'',role:'teacher',linkedEmp:'سلطان علي معيوف الطلحي'},
+  {username:'فهد انديجاني',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'فهد عبدالله بوران انديجاني',email:'',role:'teacher',linkedEmp:'فهد عبدالله بوران انديجاني'},
+  {username:'سعود الثبيتي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'سعود قليل عبدالله الثبيتي',email:'',role:'teacher',linkedEmp:'سعود قليل عبدالله الثبيتي'},
+  {username:'طارق عالم',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'طارق عادل ابن صدقه عالم',email:'',role:'teacher',linkedEmp:'طارق عادل ابن صدقه عالم'},
+  {username:'خالد الطلحي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'خالد ابن حمدي ابن احمد الطلحي',email:'',role:'teacher',linkedEmp:'خالد ابن حمدي ابن احمد الطلحي'},
+  {username:'ياسر المؤيد',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'ياسر خالد محمد المؤيد',email:'',role:'teacher',linkedEmp:'ياسر خالد محمد المؤيد'},
+  {username:'عامر الطلحي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'عامر سليم دخييل الطلحي',email:'',role:'teacher',linkedEmp:'عامر سليم دخييل الطلحي'},
+  {username:'طلال السفياني',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'طلال حميد رده السفياني',email:'',role:'teacher',linkedEmp:'طلال حميد رده السفياني'},
+  {username:'سالم الطلحي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'سالم عبدالرحمن مسيفر الطلحي',email:'',role:'teacher',linkedEmp:'سالم عبدالرحمن مسيفر الطلحي'},
+  {username:'يحي مباركي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'يحي علي علي مباركي',email:'',role:'teacher',linkedEmp:'يحي علي علي مباركي'},
+  {username:'عبدالله الشهري',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'عبدالله محمد عوضه الشهري',email:'',role:'teacher',linkedEmp:'عبدالله محمد عوضه الشهري'},
+  {username:'ماجد عيضه السفياني',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'ماجد ابن عيضه ابن حامد السفياني',email:'',role:'teacher',linkedEmp:'ماجد ابن عيضه ابن حامد السفياني'},
+  {username:'فيصل الثقفي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'فيصل بن عقاب بن موسى الثقفي',email:'',role:'teacher',linkedEmp:'فيصل بن عقاب بن موسى الثقفي'},
+  {username:'عبدالله الاسمري',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'عبدالله علي عبدالله الاسمري',email:'',role:'teacher',linkedEmp:'عبدالله علي عبدالله الاسمري'},
+  {username:'سامي العصيمي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'سامي حميد سفر العصيمي',email:'',role:'teacher',linkedEmp:'سامي حميد سفر العصيمي'},
+  {username:'ماجد الثبيتي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'ماجد عوض الله معيوض الثبيتي',email:'',role:'teacher',linkedEmp:'ماجد عوض الله معيوض الثبيتي'},
+  {username:'ياسر الطلحي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'ياسر بن محمد بن عطيه الطلحي',email:'',role:'teacher',linkedEmp:'ياسر بن محمد بن عطيه الطلحي'},
+  {username:'نواف الهذلي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'نواف بن عبدالله بن حسين الهذلي',email:'',role:'teacher',linkedEmp:'نواف بن عبدالله بن حسين الهذلي'},
+  {username:'فهد النفيعي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'فهد رجاء عواض النفيعي',email:'',role:'teacher',linkedEmp:'فهد رجاء عواض النفيعي'},
+  {username:'فواز الحارثي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'فواز عواض راضي الحارثي',email:'',role:'teacher',linkedEmp:'فواز عواض راضي الحارثي'},
+  {username:'نواف النمري',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'نواف عباد ابراهيم النمري',email:'',role:'teacher',linkedEmp:'نواف عباد ابراهيم النمري'},
+  {username:'حمدان الحارثي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'حمدان عوض مسكن الحارثي',email:'',role:'teacher',linkedEmp:'حمدان عوض مسكن الحارثي'},
+  {username:'نبيل العتيبي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'نبيل عطيه فيصل العتيبي',email:'',role:'teacher',linkedEmp:'نبيل عطيه فيصل العتيبي'},
+  {username:'بندر الجعيد',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'بندر ابن عوض ابن مفلح الجعيد',email:'',role:'teacher',linkedEmp:'بندر ابن عوض ابن مفلح الجعيد'},
+  {username:'صبحي السيالي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'صبحي ابن صالح ابن وصل الله السيالي',email:'',role:'teacher',linkedEmp:'صبحي ابن صالح ابن وصل الله السيالي'},
+  {username:'محمد السالمي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'محمد عواض عمر السالمي',email:'',role:'teacher',linkedEmp:'محمد عواض عمر السالمي'},
+  {username:'ماجد حماد السفياني',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'ماجد حماد حامد السفياني',email:'',role:'teacher',linkedEmp:'ماجد حماد حامد السفياني'},
+  {username:'محمد الغريبي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'محمد رداد حسين الغريبي',email:'',role:'teacher',linkedEmp:'محمد رداد حسين الغريبي'},
+  {username:'خالد العصيمي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'خالد تركي عبيسان العصيمي',email:'',role:'teacher',linkedEmp:'خالد تركي عبيسان العصيمي'},
+  {username:'شاكر الذويبي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'شاكر عواض وصل الله الذويبي',email:'',role:'teacher',linkedEmp:'شاكر عواض وصل الله الذويبي'},
+  {username:'محمد السفياني',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'محمد سحيم عطيه السفياني',email:'',role:'teacher',linkedEmp:'محمد سحيم عطيه السفياني'},
+  {username:'عبدالله السيالي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'عبدالله عواض عيضه السيالي',email:'',role:'teacher',linkedEmp:'عبدالله عواض عيضه السيالي'},
+  {username:'فهد الحارثي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'فهد حسين علي الحارثي',email:'',role:'teacher',linkedEmp:'فهد حسين علي الحارثي'},
+  {username:'عبدالواحد الزايدي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'عبدالواحد سالم حسن الزايدي',email:'',role:'teacher',linkedEmp:'عبدالواحد سالم حسن الزايدي'},
+  {username:'بندر العصيمي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'بندر حامد حماد العصيمي',email:'',role:'teacher',linkedEmp:'بندر حامد حماد العصيمي'},
+  {username:'صالح الزهراني',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'صالح محمد سعيد الزهراني',email:'',role:'teacher',linkedEmp:'صالح محمد سعيد الزهراني'},
+  {username:'محمد الطلحي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'محمد عامر عواض الطلحي',email:'',role:'teacher',linkedEmp:'محمد عامر عواض الطلحي'},
+  {username:'محمد الزهراني',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'محمد محسن مسفر الزهراني',email:'',role:'teacher',linkedEmp:'محمد محسن مسفر الزهراني'},
+  {username:'سيف الثبيتي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'سيف فهد رده الثبيتي',email:'',role:'teacher',linkedEmp:'سيف فهد رده الثبيتي'},
+  {username:'حامد السويعدي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'حامد ابن حمدي ابن محمد السويعدي',email:'',role:'teacher',linkedEmp:'حامد ابن حمدي ابن محمد السويعدي'},
+  {username:'تركي الثبيتي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'تركي محمد مستور الثبيتي',email:'',role:'teacher',linkedEmp:'تركي محمد مستور الثبيتي'},
+  {username:'عبدالله الزهراني',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'عبدالله محمد جمعان الزهراني',email:'',role:'teacher',linkedEmp:'عبدالله محمد جمعان الزهراني'},
+  {username:'سطام الثبيتي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'سطام تركي ابراهيم الثبيتي',email:'',role:'teacher',linkedEmp:'سطام تركي ابراهيم الثبيتي'},
+  {username:'مشهور لافي الحارثي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'مشهور لافي سعد الحارثي',email:'',role:'teacher',linkedEmp:'مشهور لافي سعد الحارثي'},
+  {username:'عبدالرحمن الحارثي',password:'sha256:9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0',name:'عبدالرحمن صالح ابن مصلح الحارثي',email:'',role:'teacher',linkedEmp:'عبدالرحمن صالح ابن مصلح الحارثي'}
 ];
 
 let USERS=[], EMPLOYEES=[], records=[], reportList=[], empIdCounter=62;
@@ -1992,6 +2054,17 @@ function boot(){
     }
     sortEmps();
     USERS       = LS.get(K.u, DEF_USERS);
+    // 🔄 ترقية تلقائية: إضافة المعلمين الـ ٦١ للمستخدمين الموجودين (مرة واحدة)
+    if(!LS.get('ghiyab_users_v3_teachers', false)){
+      // أضف فقط المعلمين اللي ما هم موجودين
+      DEF_USERS.forEach(function(defU){
+        if(defU.role === 'teacher' && !USERS.find(function(u){ return u.username === defU.username; })){
+          USERS.push({...defU});
+        }
+      });
+      LS.set(K.u, USERS);
+      LS.set('ghiyab_users_v3_teachers', true);
+    }
     // 🔐 ترقية كلمات المرور القديمة إلى مشفّرة (آمن: يستمر بدون انتظار)
     upgradeOldPasswords();
     empIdCounter= LS.get(K.c, 62);
